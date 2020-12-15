@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>332073866680-ptth08r5l5djhj33b5u0gkc4o3qnot17.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.332073866680-ptth08r5l5djhj33b5u0gkc4o3qnot17</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCowaqr7ABqox9s-SS1VUDVeCelJtFCkXs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>332073866680</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>nz.threek.geopig</string>
+	<key>PROJECT_ID</key>
+	<string>geopig-763ec</string>
+	<key>STORAGE_BUCKET</key>
+	<string>geopig-763ec.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:332073866680:ios:7ac5f734e5db3fa6d7ab4d</string>
+</dict>
+</plist>

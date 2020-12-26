@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "332073866680-dvm1psnufrsd8eqi7plq2ae4bg2gtuvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nz.threek.geopig",
+            "certificate_hash": "cfb2980489854ea07634088cd7f023bdb161ad0b"
+          }
+        },
+        {
           "client_id": "332073866680-tm4g0c8lr8dbbjaptrtf2evf3k075i95.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "332073866680-tm4g0c8lr8dbbjaptrtf2evf3k075i95.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "332073866680-aibg1u0714gknr9ff2spem8p7p5rfnca.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.threek.geopig"
+              }
             }
           ]
         }

@@ -1,5 +1,7 @@
 import 'package:async_redux/async_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:geopig/pages/dashboard/dashboard.dart';
+import 'package:geopig/pages/login/login.dart';
 import 'package:geopig/pages/splash.dart';
 
 Store<int> store;
@@ -20,6 +22,12 @@ class App extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      initialRoute: '/',
+      routes: {
+        //'/': (context) => Dashboard(),
+        '/login': (context) => Login(),
+        '/dashboard': (context) => Dashboard()
+      },
       home: Splash(),
     )
   );

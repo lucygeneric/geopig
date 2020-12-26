@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:geopig/pages/login.dart';
+import 'package:geopig/pages/dashboard/dashboard.dart';
+import 'package:geopig/pages/login/login.dart';
+import 'package:geopig/services/auth.dart';
 
 
 class Splash extends StatefulWidget {
@@ -10,7 +12,16 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
 
-  // Splash also connects to firebase
+  // Splash also connects to firebase.  We need to wait for firebase to be ready.
+  Future<void> initialRoute(BuildContext context) async {
+    await Future<void>.microtask(() {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute<Login>(
+          builder: (BuildContext context) {
+            return AuthenticationService.loggedIn ? Dashboard() : Login();
+          }));
+    });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +35,14 @@ class _SplashState extends State<Splash> {
         // Check for errors
         if (snapshot.hasError) throw("Fucked up TODO FIXME");
         
-        if (snapshot.connectionState == ConnectionState.done) return Login();
+        if (snapshot.connectionState == ConnectionState.done) 
+          initialRoute(context);
         
-        return Container(color: Colors.red, child: Text("Loading firebase"));
+        return Hero(
+          tag: 'splashHero',
+          child: Image.asset(
+            'assets/logo.png',
+          ));
       },
     );
   }

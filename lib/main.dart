@@ -1,5 +1,6 @@
 import 'package:async_redux/async_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geopig/pages/dashboard/dashboard.dart';
 import 'package:geopig/pages/login/login.dart';
 import 'package:geopig/pages/splash.dart';
@@ -20,7 +21,9 @@ class App extends StatelessWidget {
       title: 'Geopig Slave Watchdog',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        //visualDensity: VisualDensity.adaptivePlatformDensity,
+        backgroundColor: Colors.white,
+        scaffoldBackgroundColor: Colors.white
       ),
       initialRoute: '/',
       routes: {
@@ -28,7 +31,11 @@ class App extends StatelessWidget {
         '/login': (context) => Login(),
         '/dashboard': (context) => Dashboard()
       },
-      home: Splash(),
+      home: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarColor: Colors.black
+        ),
+        child: Splash()),
     )
   );
 }

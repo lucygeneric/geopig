@@ -9,10 +9,19 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
-enum LoginFlowState { INITIALIZING, LOGGED_IN, LOGGED_OUT }
+enum LoginFlowState {
+  IDLE,
+  VALIDATING,
+  VERIFYING,
+  UNREACHABLE,
+  CODE_SENT,
+  CODE_VALIDATING,
+  CODE_FAILED,
+  AUTHENTICATED
+}
 class _LoginState extends State<Login> {
 
-  LoginFlowState state = LoginFlowState.INITIALIZING;
+  LoginFlowState state = LoginFlowState.IDLE;
 
   @override
   void initState(){
@@ -25,15 +34,15 @@ class _LoginState extends State<Login> {
       .authStateChanges()
       .listen((User user) {
         if (user == null) {
-          setState((){ state = LoginFlowState.LOGGED_OUT; });
+          setState((){ state = LoginFlowState.IDLE; });
         } else {
-          setState((){ state = LoginFlowState.LOGGED_IN; });
+          setState((){ state = LoginFlowState.AUTHENTICATED; });
         }
       });
   }
 
   void updateLogin(LoginFlowState s) {
-    if (s == LoginFlowState.LOGGED_IN){
+    if (s == LoginFlowState.AUTHENTICATED){
       Navigator.of(context).pushNamed("dashboard");
       return;
     }
@@ -42,14 +51,12 @@ class _LoginState extends State<Login> {
 
   Widget widgetFromState(){
     switch(state){
-      case LoginFlowState.INITIALIZING:
+      case LoginFlowState.IDLE:
         return Center(child: CircularProgressIndicator());
-      case LoginFlowState.LOGGED_OUT:
-        return AuthenticatePage(
-          onComplete: (LoginFlowState state) => updateLogin(state)
-        );
-      case LoginFlowState.LOGGED_IN:
-        return Text("Logged in yo");
+      // case LoginFlowState.LOGGED_OUT:
+      //   return AuthenticatePage(
+      //     onComplete: (LoginFlowState state) => updateLogin(state)
+      //   );
       default:
         return Container(child: Text("erm"));
     }
@@ -57,12 +64,8 @@ class _LoginState extends State<Login> {
 
   String get currentStateText {
     switch(state){
-      case LoginFlowState.INITIALIZING:
+      case LoginFlowState.IDLE:
         return "Initializing..";
-      case LoginFlowState.LOGGED_OUT:
-        return "Logged out / unauthed.";
-      case LoginFlowState.LOGGED_IN:
-        return "Logged in :D";
       default:
         return "Idk";
     }
@@ -71,14 +74,19 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column( 
-        mainAxisAlignment: MainAxisAlignment.center,
-        children:[
-          Text("Current state: $currentStateText"),
-          Padding(padding: EdgeInsets.all(kGutterWidth), child:
-            widgetFromState())
-        ]
-      )
-    );
+      body: Padding(padding: EdgeInsets.all(kGutterWidth), child:
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children:[
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 20),
+            ),
+            Text("Current state: $currentStateText"),
+
+            widgetFromState()
+          ]
+        )
+    ));
   }
 }

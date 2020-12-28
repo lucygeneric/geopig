@@ -10,11 +10,13 @@ class AuthenticationService {
 
   static bool get loggedIn => user != null;
 
+  static logout() => FirebaseAuth.instance.signOut();
+
   AuthCredential phoneAuthCredential;
   String verificationId;
 
   Future<bool> verifyNumber(String number) {
-    
+
     var completer = Completer<bool>();
 
     FirebaseAuth.instance.verifyPhoneNumber(
@@ -66,4 +68,5 @@ class AuthenticationService {
     }
     return false;
   }
+
 }

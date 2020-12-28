@@ -1,10 +1,10 @@
 # This is a generated file; do not edit or check into version control.
-firebase_auth=/Users/steve/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.18.4+1/
-firebase_auth_web=/Users/steve/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-0.3.2+3/
-firebase_core=/Users/steve/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.5.3/
-firebase_core_web=/Users/steve/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-0.2.1+1/
-libphonenumber=/Users/steve/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/libphonenumber-1.0.2/
-path_provider=/Users/steve/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-1.6.24/
-path_provider_linux=/Users/steve/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-0.0.1+2/
-path_provider_macos=/Users/steve/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-0.0.4+6/
-path_provider_windows=/Users/steve/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-0.0.4+3/
+firebase_auth=/home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.18.4+1/
+firebase_auth_web=/home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-0.3.2+3/
+firebase_core=/home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.5.3/
+firebase_core_web=/home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-0.2.1+1/
+libphonenumber=/home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/libphonenumber-1.0.1/
+path_provider=/home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-1.6.24/
+path_provider_linux=/home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-0.0.1+2/
+path_provider_macos=/home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-0.0.4+6/
+path_provider_windows=/home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-0.0.4+3/

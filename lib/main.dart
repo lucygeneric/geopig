@@ -4,18 +4,17 @@ import 'package:flutter/services.dart';
 import 'package:geopig/pages/dashboard/dashboard.dart';
 import 'package:geopig/pages/login/login.dart';
 import 'package:geopig/pages/splash.dart';
-
-Store<int> store;
+import 'package:geopig/redux/app_state.dart';
+import 'package:geopig/redux/store.dart';
 
 void main() {
-  store = Store<int>(initialState: 0);
   runApp(App());
 }
 
 class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) => StoreProvider<int>(
+  Widget build(BuildContext context) => StoreProvider<AppState>(
     store: store,
     child: MaterialApp(
       title: 'Geopig Slave Watchdog',

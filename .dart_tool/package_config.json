@@ -2,6 +2,18 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "after_layout",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/after_layout-1.0.7+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "animated_text_kit",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/animated_text_kit-2.5.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "async_redux",
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/async_redux-3.0.5",
       "packageUri": "lib/",
@@ -326,7 +338,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-12-28T01:03:01.441984Z",
+  "generated": "2020-12-28T03:35:10.288450Z",
   "generator": "pub",
   "generatorVersion": "2.9.2"
 }

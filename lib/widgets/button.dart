@@ -24,7 +24,7 @@ class Button extends StatelessWidget {
           borderRadius: BorderRadius.circular(kBorderRadius)
         ),
         color: color,
-        onPressed: () {},
+        onPressed: onTap,
         child: Padding(
           padding: EdgeInsets.all(15.0),
           child: Text(label, style: TextStyles.button(context).copyWith(color: Utils.darken(color, 0.5))

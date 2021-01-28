@@ -12,34 +12,21 @@ import 'package:geopig/redux/app_state.dart';
 import 'package:geopig/services/auth.dart';
 import 'package:geopig/type.dart';
 import 'package:geopig/widgets/button.dart';
-import 'package:geopig/widgets/input.dart';
 import 'package:geopig/widgets/progress.dart';
 import 'package:geopig/widgets/round_icon.dart';
 import 'package:geopig/widgets/sms_code_input.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 
-
-
-abstract class LoginContentEnum {
-  factory LoginContentEnum._() => null; // prevents extension.
-  static const int INITIAL = 0;
-  static const int CODE_ENTRY = 1;
-  static const int CODE_TIMEOUT = 2;
-  static const int AUTH_FAILED = 3;
-  static const int COMPLETE = 4;
-}
 class _Login extends StatefulWidget {
 
   final AuthenticatorState authState;
-  final int contentIndex;
   final int pageIndex;
   final String tagline;
   final String description;
 
   _Login({
     this.authState,
-    this.contentIndex,
     this.pageIndex,
     this.tagline = "",
     this.description = ""
@@ -58,7 +45,7 @@ class _LoginState extends State<_Login> {
   PageController pageController;
   AuthenticationService authService;
   bool phoneNumberIsValid = false;
-  AuthenticatorState stateWas;
+  String taglineWas;
 
   @override
   void initState(){
@@ -88,17 +75,19 @@ class _LoginState extends State<_Login> {
 
   Widget get resendControls => SizedBox(
     width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
-    child: SizedBox(height: 100, child: Flexible(child: Column(children: [
+    height: secondaryControlHeight,
+    child: Column(children: [
       Container(child: Text("Didn't get a code?", style: TextStyles.important(context))),
       Container(child: Text("It can take up to a minute to arrive ...", style: TextStyles.regular(context))),
-      Button(label: "Send it again!")
-  ]))));
+      Button(label: "Send it again!", onTap: resendCode)
+  ]));
 
   Widget get timeoutControls => SizedBox(
     width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
+    height: secondaryControlHeight,
     child: Column(children: [
       Container(child:
-        Button(label: "Send a new code", onTap: authService.resendCode),
+        Button(label: "Send a new code", onTap: resendCode)
       ),
       Button(label: "You didn't send me a code!", color: PigColor.error)
   ]));
@@ -107,9 +96,11 @@ class _LoginState extends State<_Login> {
     FirebaseAuth.instance
       .authStateChanges()
       .listen((User user) {
-        if (user != null)
+        if (user != null){
           // navigate to dash CHECK IF THEY HAS A NAME THO
-          print("Logged in....");
+          print("----------------------- LOGGED IN STATE ------------------------------");
+
+        }
       });
   }
 
@@ -127,45 +118,79 @@ class _LoginState extends State<_Login> {
     return number.phoneNumber;
   }
 
-  void timeoutSecondaryControlReveal() async {
-    if (secondaryControlContent == null || controlsVisible) return;
+  void resendCode() async {
+    String fullNumber = await getPhoneNumber(inputController.text);
+    authService.resendCode(fullNumber);
+  }
 
-    await Future.delayed(Duration(milliseconds: 1500), () => print("Revealing..."));
-    setState(() { this.secondaryControlHeight = 120.0; });
+  void timeoutSecondaryControlReveal() async {
+    // make sure the panel is hidden if the content is awol
+    if (secondaryControlContent == null){
+      this.secondaryControlHeight = 0.0;
+      return;
+    }
+    // don't do this if they are already visible
+    if (controlsVisible) return;
+
+    await Future.delayed(Duration(milliseconds: 1500), () => print("[INFO] Revealing Secondary Controls"));
+    setState(() { this.secondaryControlHeight = 130.0; });
   }
 
   void addAdditionalControls(){
-    // sometimes we have additional controls
-    switch (widget.contentIndex){
-      case LoginContentEnum.CODE_ENTRY:
-        secondaryControlContent = resendControls;
-        break;
-      case LoginContentEnum.CODE_TIMEOUT:
-        secondaryControlContent = timeoutControls;
-        break;
-      default:
-        // do nowt
-    }
+    // sometimes we have additional controls.  There are rules for when to show them
+    secondaryControlContent = null;
+
+    /// ADDITIVE
+    // if we are on code entry
+    if (widget.pageIndex == PageEnum.CODE_ENTRY.index)
+      secondaryControlContent = resendControls;
+
+    // if we are on code timeout
+    if (widget.pageIndex == PageEnum.CODE_TIMEOUT.index)
+      secondaryControlContent = timeoutControls;
+
+    /// SUBTRACTIVE
+    // if it's verifying then don't show the controls
+    if (widget.authState == AuthenticatorState.CODE_VERIFYING)
+      secondaryControlContent = null;
+
     timeoutSecondaryControlReveal();
+  }
+
+  Widget loadingWidget(){
+    if ([AuthenticatorState.DIGITS_VERIFYING, AuthenticatorState.CODE_VERIFYING].contains(widget.authState))
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(widget.authState == AuthenticatorState.DIGITS_VERIFYING ? "Searching for your digits..." : "Doing a thing...", style: TextStyles.important(context)),
+            Spacer(),
+            ProgressSpinner(size: 16.0),
+          ]
+        )
+
+      );
+    return Container();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    // reset if state changed
-    if (widget.authState != stateWas){
+    // reset if tagline changed because it means the
+    // text items need to regenerate
+    if (widget.tagline != taglineWas){
       reset();
-      stateWas = widget.authState;
+      taglineWas = widget.tagline;
     }
 
     addAdditionalControls();
 
     // build the type array here
     List<String> typeText = [widget.tagline];
-    if (widget.contentIndex == 0)
+    // add a little lead-in
+    if (widget.pageIndex == 0)
       typeText.insertAll(0, ['.','','.',]);
-
-    print("BUILD IS CALLED AND PRIMARY CONTENT OPAICTY IS $primaryContentOpacity");
 
     return Scaffold(
       body: Container(
@@ -213,95 +238,107 @@ class _LoginState extends State<_Login> {
                     Text(widget.description, style: TextStyles.regular(context)),
               )),
 
-              Flexible(child:
-                PageView(
-                  controller: pageController,
-                  children: [
-                    /// IDX 0 - DIGITS/IDLE ------------------
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
+                  Expanded(child:
+                  AnimatedOpacity(
+                duration: Duration(milliseconds: 150),
+                opacity: primaryContentOpacity,
+                child:
+                    PageView(
+                      controller: pageController,
                       children: [
-                        AnimatedOpacity(
-                          duration: Duration(milliseconds: 250),
-                          opacity: primaryContentOpacity,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: PigColor.interfaceGrey.withOpacity(0.5),
-                              borderRadius: BorderRadius.all(Radius.circular(kBorderRadius)),
-                              border: Border.all(width: 1, color: PigColor.interfaceGrey)
-                            ),
-                            padding: EdgeInsets.all(kInputPadding),
-                            child: Stack(
-                              children: [
-                                InternationalPhoneNumberInput(
-                                  onInputChanged: (PhoneNumber val) => print(val.phoneNumber),
-                                  onInputValidated: (bool val) => setState((){ phoneNumberIsValid = val; }),
-                                  onSubmit: validate,
-                                  textFieldController: inputController,
-                                  inputDecoration: InputDecoration.collapsed(
-                                    hintText: 'Tap to begin..'
-                                  ),
-                                  countries: ["NZ"]
+                        /// IDX 0 - DIGITS/IDLE ------------------
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            AnimatedOpacity(
+                              duration: Duration(milliseconds: 250),
+                              opacity: primaryContentOpacity,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: PigColor.interfaceGrey.withOpacity(0.5),
+                                  borderRadius: BorderRadius.all(Radius.circular(kBorderRadius)),
+                                  border: Border.all(width: 1, color: PigColor.interfaceGrey)
                                 ),
+                                padding: EdgeInsets.all(kInputPadding),
+                                child: Stack(
+                                  children: [
+                                    InternationalPhoneNumberInput(
+                                      onInputChanged: (PhoneNumber val) => print(val.phoneNumber),
+                                      onInputValidated: (bool val) => setState((){ phoneNumberIsValid = val; }),
+                                      onSubmit: validate,
+                                      textFieldController: inputController,
+                                      inputDecoration: InputDecoration.collapsed(
+                                        hintText: 'Tap to begin..'
+                                      ),
+                                      countries: ["NZ"]
+                                    ),
 
-                                if (phoneNumberIsValid)
-                                  Positioned(right: 0, child:
-                                    RoundIcon(color: PigColor.primary, icon: Icons.done, size: Size(18,18))
-                                  ),
+                                    if (phoneNumberIsValid)
+                                      Positioned(right: 0, child:
+                                        RoundIcon(color: PigColor.primary, icon: Icons.done, size: Size(18,18))
+                                      ),
 
-                                if (!phoneNumberIsValid)
-                                  Positioned(right: 0, child:
-                                    RoundIcon(color: PigColor.warn, icon: Icons.phone_locked, size: Size(18,18))
-                                  )
-                              ])
-                          ),
+                                    if (!phoneNumberIsValid)
+                                      Positioned(right: 0, child:
+                                        RoundIcon(color: PigColor.warn, icon: Icons.phone_locked, size: Size(18,18))
+                                      )
+                                  ])
+                              ),
+                            ),
+
+                            loadingWidget()
+
+                        ]),
+
+                        /// IDX 1 - CODE ------------------
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SmsCodeInput(
+                              enabled: widget.pageIndex == PageEnum.CODE_ENTRY.index,
+                              onFinished: (String code) => authService.submitOTP(code),
+                            ),
+                            loadingWidget()
+                          ]),
+
+                        /// IDX 2 - CODE TIMEOUT
+                        Container(child:
+                          Container()
                         ),
 
-                        if (widget.authState == AuthenticatorState.VERIFYING)
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text("Searching for your digits...", style: TextStyles.important(context)),
-                                Spacer(),
-                                ProgressSpinner(size: 16.0),
-                              ]
-                            )
+                        /// IDX 3 - CODE COMPLETE
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 60, child:
+                              Button(label: "GO!", onTap: () => Navigator.of(context).pushReplacementNamed("/dashboard")))
+                          ]
+                        ),
 
-                          ),
-                    ]),
+                        /// IDX 4 - ERROR
+                        Container(child:
+                          Text('I don\'t know what to do...'))
+                      ]),
+                  ),
+              ),
 
-                    /// IDX 1 - CODE ------------------
-                    SmsCodeInput(
-
-                    ),
-
-                    /// IDX 2 - CODE TIMEOUT
-                    Container(child:
-                      Container(child: Text('timeout'))
-                    ),
-
-                    /// IDX 3 - CODE FAILED
-                    Container(child:
-                      Container(child: Text('failed'))
-                    ),
-
-                    /// IDX 4 - COMPLETE
-                    Container(child: Text('complete'))
-                  ]),
+              SingleChildScrollView(child:
+                // this thing overflows. problem for another day.
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 250),
+                  height: secondaryControlHeight,
+                  child: secondaryControlContent
+                )
               )
             ]
           ),
 
           // Secondary Controls
-          Positioned(bottom: 0, left:0, child:
-            AnimatedContainer(
-              duration: Duration(milliseconds: 250),
-              height: secondaryControlHeight,
-              child: secondaryControlContent
-            )
-          )
+
+
         ])
 
     ));
@@ -310,11 +347,14 @@ class _LoginState extends State<_Login> {
 
 /// REDUX VIEW MODEL /////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
+///
+enum PageEnum {
+  INITIAL, CODE_ENTRY, CODE_TIMEOUT, COMPLETE, ERROR
+}
 class LoginModel extends Redux.BaseModel<AppState> {
   LoginModel();
 
   AuthenticatorState authState;
-  int contentIndex;
   int pageIndex;
   String tagline;
   String description;
@@ -322,72 +362,68 @@ class LoginModel extends Redux.BaseModel<AppState> {
 
   // Taglines
   List<String> taglineContents = [
-    "You seem new?",
-    "You are new!",
-    "Whoops!",
-    "This is embarrasing..",
-    "complete"
+    "Do I know you?",
+    "Eyeballing...",
+    "Whoops...",
+    "Thanks!",
+    "Uh Oh..."
   ];
 
   // Descriptions
   List<String> descriptionContents = [
     "Type in your phone number and I will look to see if I have you in my database...",
-    "I will send you a txt message with a unique code so that I can verify that you are really you. Enter this code below..",
+    "I have sent you a txt message with a unique code so that I can verify that you are really you. Enter this code below..",
     "It took too long for you to enter the code so I had to reset it, sorry about that.  Ask me for a new code!",
-    "The RealClean login service is unreachable.\n\nCan you check that you are connected to the internet and try this again?",
-    "complete"
+    "We are now connected! Good things await inside, lets get started!",
+    "Something has gone terribly wrong................................................................................"
   ];
 
 
   LoginModel.build({
     @required this.authState,
-    @required this.contentIndex,
     @required this.pageIndex,
     @required this.tagline,
     @required this.description,
-  }) : super(equals: [authState, contentIndex, pageIndex, tagline, description]);
+  }) : super(equals: [authState, pageIndex, tagline, description]);
 
 
   @override
   LoginModel fromStore() {
 
-    int contentIndex;
-    int pageIndex;
 
+    int pageIndex;
+    print("----------------------- state.authState.state ${state.authState.state}");
     switch(state.authState.state){
       case AuthenticatorState.IDLE:
-      case AuthenticatorState.VERIFYING:
-        contentIndex = LoginContentEnum.INITIAL;
-        pageIndex = 0;
+      case AuthenticatorState.DIGITS_VERIFYING:
+        pageIndex = PageEnum.INITIAL.index;
         break;
-      case AuthenticatorState.VERIFIED:
+      case AuthenticatorState.DIGITS_VERIFIED:
       case AuthenticatorState.CODE_SENT:
-        contentIndex = LoginContentEnum.CODE_ENTRY;
-        pageIndex = 1;
+        pageIndex = PageEnum.CODE_ENTRY.index;
         break;
       case AuthenticatorState.FAILED:
-        contentIndex = LoginContentEnum.AUTH_FAILED;
-        pageIndex = 2;
+        pageIndex = PageEnum.ERROR.index;
         break;
       case AuthenticatorState.CODE_TIMEOUT:
-        contentIndex = LoginContentEnum.CODE_TIMEOUT;
-        pageIndex = 1;
+        pageIndex = PageEnum.CODE_TIMEOUT.index;
         break;
-      case AuthenticatorState.VALIDATED:
-        contentIndex = LoginContentEnum.COMPLETE;
-        pageIndex = 3;
+      case AuthenticatorState.CODE_VERIFYING:
+        // no custom content, it's just verifying again...
+        pageIndex = PageEnum.CODE_ENTRY.index;
+        break;
+      case AuthenticatorState.AUTHENTICATED:
+        pageIndex = PageEnum.COMPLETE.index;
         break;
       default:
-        contentIndex = LoginContentEnum.INITIAL;
-        pageIndex = 0;
+        pageIndex = PageEnum.INITIAL.index;
     }
 
     return LoginModel.build(
       authState: state.authState.state,
-      contentIndex: contentIndex,
       pageIndex: pageIndex,
-      tagline: taglineContents[contentIndex],
-      description: descriptionContents[contentIndex]
+      tagline: taglineContents[pageIndex],
+      description: descriptionContents[pageIndex]
     );
   }
 }
@@ -401,7 +437,6 @@ class Login extends StatelessWidget {
         authState: vm.authState,
         tagline: vm.tagline,
         description: vm.description,
-        contentIndex: vm.contentIndex,
         pageIndex: vm.pageIndex
       ),
     );

@@ -5,12 +5,13 @@ import 'package:geopig/redux/store.dart';
 
 enum AuthenticatorState {
   IDLE,
-  VERIFYING,
-  VERIFIED,
+  DIGITS_VERIFYING,
+  DIGITS_VERIFIED,
   FAILED,
   CODE_SENT,
   CODE_TIMEOUT,
-  VALIDATED
+  CODE_VERIFYING,
+  AUTHENTICATED
 }
 class AuthenticationService {
 
@@ -28,40 +29,49 @@ class AuthenticationService {
 
   AuthCredential phoneAuthCredential;
   String verificationId;
+  int resendCodeToken;
   bool codeSent = false;
+  bool authenticated = false;
 
-  verifyNumber(String number, { bool isResend = false }) {
-    store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.VERIFYING));
+  verifyNumber(String number, { int forceResendingToken }) {
+
+    if (forceResendingToken == null)
+      store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.DIGITS_VERIFYING));
+
     FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: number,
-      timeout: Duration(seconds: 5),
+      timeout: Duration(seconds: 15),
+      forceResendingToken: forceResendingToken,
       verificationCompleted: (PhoneAuthCredential credential) {
         phoneAuthCredential = credential;
         print("----------- verifyNumber Returns true");
-        if (!isResend)
-          store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.VERIFIED));
+
+        if (forceResendingToken == null)
+          store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.DIGITS_VERIFIED));
       },
       verificationFailed: (FirebaseAuthException e) {
         print("----------- unable to authenticate, $e");
+
         store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.FAILED));
       },
       codeSent: (String vId, int resendToken) {
         print("----------- code sent, $verificationId");
         verificationId = vId;
+        resendCodeToken = resendToken;
+
         store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.CODE_SENT));
-        // debug
-        // submitOTP("123456");
       },
       codeAutoRetrievalTimeout: (String vId) {
         print("----------- code timeout, $verificationId");
         verificationId = vId;
-        store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.CODE_TIMEOUT));
-      },
+        if (!authenticated)
+          store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.CODE_TIMEOUT));
+      }
     );
   }
 
   void resendCode(String number){
-    verifyNumber(number, isResend: true);
+    verifyNumber(number, forceResendingToken: resendCodeToken);
   }
 
   void verificationCompleted(AuthCredential cred) {
@@ -69,6 +79,9 @@ class AuthenticationService {
   }
 
   submitOTP(String smsCode) async {
+
+    store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.CODE_VERIFYING));
+
     phoneAuthCredential = PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: smsCode);
 
@@ -76,7 +89,8 @@ class AuthenticationService {
       await FirebaseAuth.instance
           .signInWithCredential(phoneAuthCredential)
           .then((UserCredential credential) {
-            store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.VALIDATED));
+            authenticated = true;
+            store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.AUTHENTICATED));
           }).catchError((e) { return false; });
     } catch (e) {
       store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.FAILED));

@@ -10,11 +10,15 @@ class Input extends StatelessWidget {
   final TextEditingController controller;
   final bool enabled;
   final int maxLength;
+  final FocusNode focusNode;
+  final Function onChanged;
 
   Input({
     this.controller,
     this.enabled = true,
-    this.maxLength
+    this.maxLength,
+    this.focusNode,
+    this.onChanged
   });
 
   OutlineInputBorder standardBorder({Color color}){
@@ -32,7 +36,7 @@ class Input extends StatelessWidget {
     focusedBorder: standardBorder(color: PigColor.primary),
     errorBorder: standardBorder(color: PigColor.error),
     disabledBorder: standardBorder(color: PigColor.interfaceGrey.withOpacity(0.1)),
-    enabledBorder: standardBorder()
+    enabledBorder: standardBorder(),
   );
 
 
@@ -44,6 +48,8 @@ class Input extends StatelessWidget {
         maxLength: maxLength ?? TextField.noMaxLength,
         decoration: codeDecoration,
         style: TextStyles.button(context),
+        focusNode: focusNode,
+        onChanged: onChanged,
         textAlign: TextAlign.center);
 
   }

@@ -32,6 +32,7 @@ class AuthenticationService {
   int resendCodeToken;
   bool codeSent = false;
   bool authenticated = false;
+  bool codeValid = true; // assume true until they fuck it up
 
   verifyNumber(String number, { int forceResendingToken }) {
 
@@ -58,13 +59,14 @@ class AuthenticationService {
         print("----------- code sent, $verificationId");
         verificationId = vId;
         resendCodeToken = resendToken;
-
+        codeValid = true;
         store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.CODE_SENT));
       },
       codeAutoRetrievalTimeout: (String vId) {
         print("----------- code timeout, $verificationId");
         verificationId = vId;
-        if (!authenticated)
+        // timeout is relentless.. don't update state if we are in these other states
+        if (!authenticated && codeValid)
           store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.CODE_TIMEOUT));
       }
     );
@@ -94,6 +96,7 @@ class AuthenticationService {
           }).catchError((e) { return false; });
     } catch (e) {
       store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.FAILED));
+      codeValid = false;
     }
   }
 

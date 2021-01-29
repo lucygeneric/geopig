@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:async_redux/async_redux.dart' as Redux;
+import 'package:confetti/confetti.dart';
 import 'package:geopig/pages/login/type_animation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -46,16 +47,25 @@ class _LoginState extends State<_Login> {
   AuthenticationService authService;
   bool phoneNumberIsValid = false;
   String taglineWas;
+  ConfettiController confettiController;
+
 
   @override
   void initState(){
     // setup
     authService = AuthenticationService();
     pageController = PageController(initialPage: 0);
+    confettiController = ConfettiController(duration: const Duration(milliseconds: 1500));
 
     // startup
     checkAuth();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    confettiController?.dispose();
+    super.dispose();
   }
 
   void reset() async {
@@ -90,6 +100,17 @@ class _LoginState extends State<_Login> {
         Button(label: "Send a new code", onTap: resendCode)
       ),
       Button(label: "You didn't send me a code!", color: PigColor.error)
+  ]));
+
+  Widget get failedControls => SizedBox(
+    width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
+    height: secondaryControlHeight,
+    child: Column(children: [
+      Container(child: Text("Hate it when that happens.", style: TextStyles.important(context))),
+      Container(child: Text("I am going to send you a totally different code so you can approach this from a fresh angle..", style: TextStyles.regular(context))),
+      Container(child:
+        Button(label: "Send another code", onTap: resendCode)
+      ),
   ]));
 
   Future checkAuth() async {
@@ -148,6 +169,10 @@ class _LoginState extends State<_Login> {
     // if we are on code timeout
     if (widget.pageIndex == PageEnum.CODE_TIMEOUT.index)
       secondaryControlContent = timeoutControls;
+
+    // if they got it wrong...
+    if (widget.pageIndex == PageEnum.ERROR.index)
+      secondaryControlContent = failedControls;
 
     /// SUBTRACTIVE
     // if it's verifying then don't show the controls
@@ -287,7 +312,7 @@ class _LoginState extends State<_Login> {
                               ),
                             ),
 
-                            loadingWidget()
+                            loadingWidget(),
 
                         ]),
 
@@ -297,7 +322,7 @@ class _LoginState extends State<_Login> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             SmsCodeInput(
-                              enabled: widget.pageIndex == PageEnum.CODE_ENTRY.index,
+                              enabled: [PageEnum.CODE_ENTRY.index,PageEnum.CODE_TIMEOUT.index].contains(widget.pageIndex),
                               onFinished: (String code) => authService.submitOTP(code),
                             ),
                             loadingWidget()
@@ -313,14 +338,22 @@ class _LoginState extends State<_Login> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            ConfettiWidget(
+                              confettiController: confettiController,
+                              blastDirectionality: BlastDirectionality.explosive,
+                              shouldLoop: true,
+                              colors: const [
+                                PigColor.interfaceGrey,
+                                PigColor.primary
+                              ], // manually specify the colors to be used
+                            ),
                             SizedBox(height: 60, child:
                               Button(label: "GO!", onTap: () => Navigator.of(context).pushReplacementNamed("/dashboard")))
                           ]
                         ),
 
                         /// IDX 4 - ERROR
-                        Container(child:
-                          Text('I don\'t know what to do...'))
+                        Container()
                       ]),
                   ),
               ),
@@ -375,7 +408,7 @@ class LoginModel extends Redux.BaseModel<AppState> {
     "I have sent you a txt message with a unique code so that I can verify that you are really you. Enter this code below..",
     "It took too long for you to enter the code so I had to reset it, sorry about that.  Ask me for a new code!",
     "We are now connected! Good things await inside, lets get started!",
-    "Something has gone terribly wrong................................................................................"
+    "The code you entered looks strange to me... are you sure you are really a person?"
   ];
 
 

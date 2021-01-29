@@ -50,6 +50,12 @@
       "languageVersion": "2.3"
     },
     {
+      "name": "confetti",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/confetti-0.5.4+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "convert",
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/convert-2.1.1",
       "packageUri": "lib/",
@@ -266,6 +272,12 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "random_color",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/random_color-1.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -338,7 +350,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-12-28T03:35:10.288450Z",
+  "generated": "2021-01-28T23:47:05.672433Z",
   "generator": "pub",
   "generatorVersion": "2.9.2"
 }

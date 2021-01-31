@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/painting.dart';
+import 'package:intl/intl.dart';
 
 class Utils {
 
@@ -21,4 +22,14 @@ class Utils {
 
     return hslLight.toColor();
   }
+
+  static String get flatulation {
+    DateTime now = DateTime.now();
+    var timeNow = int.parse(DateFormat('kk').format(now));
+    if (timeNow <= 12) return "Morning";
+    if ((timeNow > 12) && (timeNow <= 16)) return "Afternoon";
+    if ((timeNow > 16) && (timeNow < 20)) return "Evening";
+    return "Night";
+  }
+
 }

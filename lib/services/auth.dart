@@ -11,7 +11,9 @@ enum AuthenticatorState {
   CODE_SENT,
   CODE_TIMEOUT,
   CODE_VERIFYING,
-  AUTHENTICATED
+  AUTHENTICATED,
+  HELP,
+  HELP_RESTART
 }
 class AuthenticationService {
 
@@ -41,7 +43,7 @@ class AuthenticationService {
 
     FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: number,
-      timeout: Duration(seconds: 15),
+      timeout: Duration(seconds: 120),
       forceResendingToken: forceResendingToken,
       verificationCompleted: (PhoneAuthCredential credential) {
         phoneAuthCredential = credential;

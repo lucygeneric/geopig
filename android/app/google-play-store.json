@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "pc-api-4919907671549262876-650",
+  "private_key_id": "810d78546717ca7f7b41877766bc1e421d8a48b1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCTaD0FympjmU6k\nPIU62EWMa9BsWP6NaqcCkSMMfp0PSsS+kE3jKvVVHSm2yaXdT6Ouo1UbN0L4eH9L\n2Gb3TaiHUu9HHbhbApWL6ATNRwkV8fsk/z6QO8TgQKxzjYjZxBvyO1k+jzSuVSUk\ne8M95fEdGOSkAdjFXw3r5qcEenGn3WjK5K7bKimZHVzCPpEAK8XRSFiJW91ene+2\nKARpQ1WpJG0MbpRweQMIfNd7Qoom/z2cwRCAZFxdYbOhN0TfUxzPUPUpQLFtZoMi\n36jHb2k4W6W6d0kKPeLb6hfcwILJIHvbd8Huu0Fs+PDkPMY8mSO8ZNeQ3ipzFOjT\nDU2yg7cXAgMBAAECggEAO07+8nQBP0ahKhqBnm4C+Z8tclKSRNLrFHDR8caFqe/y\n3huQgvy3TgIYVQeoGTXgTTVBWlxvMSrGSP1uXEVeL+hyBqKSGOgexHZbbD6PDMna\nOwYJpZ2utm2/FRUWwUuS1PEFFNMoppXyhk3XffGlBAiOgeCOV8dJgidA/t/HF/s0\nvzMvLVOYNmVy8GPqjWbP68Uam/P03w+tuldajfRhnfQkMRWTwNKzkJbKnODZ8Xm/\nJK6ZtmlsSAto0uzA9GRCPJdByKVhMX5gSkveJw6BjSxV1Dj4JSDJQ3uisHlvP4fj\nnssm/Mpvqn67a7A4Dzk/BRzD09TfyioLR/6yZTr5yQKBgQDHEl9bz/V+fCGDgVeQ\nE6l/WqRbRKOBUE9SLxYf+B8fdpPi7ooBeofLBpLTVGniCcEmSVtu9YgZ18cH0VYn\nQWva4TDHIbNyTmc9Vek8CKZyyo6zWAimebvQXr9VMJm8/dLv7S+E2JMrzr7J6sbH\naJ1Sdm3TCt2Zw2r+91BzoAnbjwKBgQC9j5wQId9g3fz+8FeZX8tfZ2cbsIwte9kk\n1eXPyfN5XOaunmXEcjjOTsD9orpRtvJPUg9Iv3SFpumRqKa0kZ/zqoerWnJXQzvR\nOnWAI4nxfsburhy/36hiGy346IIiAGDUyDFgibLl1BEiaYaAng8z/cJ3Qhk/fQLO\nOPqW8C/H+QKBgACkE4CFK+IrXiRBP1nsZkhNr2fH0crxyj+WfTi/IMKGLDW31OPq\nVBOYQtLBW9HpfCC2bb/utHB43GAvEVrw//rlbLXHav98NyLgau7RjE+kTU9Qgj6e\n97bVB0Kr9GLCYnJ5TgTceaTTdpPJ2Lf9ozwHu5TJXStIkMifXTfyFPYLAoGAIG4N\nOQVSffP8cHEVy3uEA5JhJW+Sy8VAZPjjFCVsrfqizIT0zCLubP00LzBDx+8QjVlw\nm/WFLchcdTrxKjsvrjQiecJDhYJPHYBu0blCxDn4NqU67eiJmh8kQk0k1kRSTJTj\nPazRGliphcWf6SkhWLe1KUn5n873R+iflmsJAaECgYBsxRZ2/WYsqYpKUSWg4p2J\nDTKWofDj8Z70LV4JuEY/TMO4jLT2Uv6dNQ/u48OvjHy2jMOuPDRgowiW2bO56MnQ\nouzyizHhc6bMeSTGsAHL+jaOjBmQWIkj4XW+XrEezzZHjTASdI6cF9/vC3yghMGP\nO7U7IckQ0Xu41laAKhtnqA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "realclean@pc-api-4919907671549262876-650.iam.gserviceaccount.com",
+  "client_id": "106685215741065465128",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/realclean%40pc-api-4919907671549262876-650.iam.gserviceaccount.com"
+}

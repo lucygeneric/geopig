@@ -12,6 +12,10 @@ class TextStyles {
     return CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontSize: 32.0, color: color ?? PigColor.headlineText, fontWeight: fontWeight ?? FontWeight.normal);
   }
 
+  static TextStyle subtitle(BuildContext context, [Color color, FontWeight fontWeight]) {
+    return CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontSize: 24.0, color: color ?? PigColor.headlineText, fontWeight: fontWeight ?? FontWeight.normal);
+  }
+
   // body
   static TextStyle regular(BuildContext context, [Color color, FontWeight fontWeight]) {
     return CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontSize: 16.0, color: color ?? PigColor.standardText, fontWeight: fontWeight ?? FontWeight.normal);

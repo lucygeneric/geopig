@@ -1,0 +1,2 @@
+json_key_file("app/google-play-store.json")
+package_name("nz.threek.geopig")

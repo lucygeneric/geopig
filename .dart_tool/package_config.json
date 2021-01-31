@@ -14,6 +14,18 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "archive",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/archive-2.0.13",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "args",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/args-1.6.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.3"
+    },
+    {
       "name": "async_redux",
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/async_redux-3.0.5",
       "packageUri": "lib/",
@@ -60,6 +72,12 @@
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/convert-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "1.17"
+    },
+    {
+      "name": "crypto",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-2.1.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.3"
     },
     {
       "name": "cupertino_icons",
@@ -134,6 +152,12 @@
       "languageVersion": "2.9"
     },
     {
+      "name": "flutter_launcher_icons",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.8.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.3"
+    },
+    {
       "name": "flutter_svg",
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_svg-0.18.1",
       "packageUri": "lib/",
@@ -150,6 +174,12 @@
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-3.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.3"
+    },
+    {
+      "name": "image",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/image-2.1.19",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
     },
     {
       "name": "intl",
@@ -266,6 +296,12 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "qr_code_scanner",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/qr_code_scanner-0.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.6"
+    },
+    {
       "name": "quiver",
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-2.1.5",
       "packageUri": "lib/",
@@ -344,13 +380,19 @@
       "languageVersion": "2.7"
     },
     {
+      "name": "yaml",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/yaml-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.4"
+    },
+    {
       "name": "geopig",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-01-28T23:47:05.672433Z",
+  "generated": "2021-01-31T20:00:18.061366Z",
   "generator": "pub",
   "generatorVersion": "2.9.2"
 }

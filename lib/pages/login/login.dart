@@ -9,14 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geopig/color.dart';
 import 'package:geopig/consts.dart';
+import 'package:geopig/redux/actions/auth.dart';
 import 'package:geopig/redux/app_state.dart';
 import 'package:geopig/services/auth.dart';
 import 'package:geopig/type.dart';
 import 'package:geopig/widgets/button.dart';
+import 'package:geopig/widgets/input.dart';
 import 'package:geopig/widgets/progress.dart';
 import 'package:geopig/widgets/round_icon.dart';
 import 'package:geopig/widgets/sms_code_input.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:geopig/redux/store.dart';
 
 
 class _Login extends StatefulWidget {
@@ -43,13 +46,15 @@ class _LoginState extends State<_Login> {
   double secondaryControlHeight = 0.0;
   Widget secondaryControlContent;
   TextEditingController inputController = TextEditingController();
+  TextEditingController helpController = TextEditingController();
   PageController pageController;
   AuthenticationService authService;
   bool phoneNumberIsValid = false;
   String taglineWas;
   ConfettiController confettiController;
 
-
+  /// SETUP ////////////////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   @override
   void initState(){
     // setup
@@ -65,9 +70,20 @@ class _LoginState extends State<_Login> {
   @override
   void dispose() {
     confettiController?.dispose();
+    helpController?.dispose();
+    pageController?.dispose();
+    inputController?.dispose();
     super.dispose();
   }
 
+  /// ACTIONS //////////////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
+  void sumbitIssueReport(){
+    store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.HELP_RESTART));
+  }
+
+  /// ANIMATION SEQUENCERS /////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   void reset() async {
     primaryContentOpacity = 0.0;
     secondaryControlContent = null;
@@ -81,38 +97,116 @@ class _LoginState extends State<_Login> {
     setState(() { primaryContentOpacity = 1.0; });
   }
 
+  /// SECONDARY CONTROLS ///////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   bool get controlsVisible => secondaryControlHeight != 0.0;
+  double secondaryControlDimensionHeight = 130;
 
-  Widget get resendControls => SizedBox(
+  Widget get resendControls {
+    secondaryControlDimensionHeight = 130;
+    return SizedBox(
     width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
     height: secondaryControlHeight,
     child: Column(children: [
       Container(child: Text("Didn't get a code?", style: TextStyles.important(context))),
       Container(child: Text("It can take up to a minute to arrive ...", style: TextStyles.regular(context))),
       Button(label: "Send it again!", onTap: resendCode)
-  ]));
+    ]));
+  }
 
-  Widget get timeoutControls => SizedBox(
-    width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
-    height: secondaryControlHeight,
-    child: Column(children: [
-      Container(child:
-        Button(label: "Send a new code", onTap: resendCode)
-      ),
-      Button(label: "You didn't send me a code!", color: PigColor.error)
-  ]));
+  Widget get timeoutControls {
+    secondaryControlDimensionHeight = 130;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
+      height: secondaryControlHeight,
+      child: Column(children: [
+        Container(child:
+          Button(label: "Send a new code", onTap: resendCode)
+        ),
+        Button(label: "You didn't send me a code!", color: PigColor.error,
+          onTap: () => store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.HELP)))
+    ]));
+  }
 
-  Widget get failedControls => SizedBox(
-    width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
-    height: secondaryControlHeight,
-    child: Column(children: [
-      Container(child: Text("Hate it when that happens.", style: TextStyles.important(context))),
-      Container(child: Text("I am going to send you a totally different code so you can approach this from a fresh angle..", style: TextStyles.regular(context))),
-      Container(child:
-        Button(label: "Send another code", onTap: resendCode)
-      ),
-  ]));
+  Widget get helpControls {
+    secondaryControlDimensionHeight = 65;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
+      height: secondaryControlHeight,
+      child: Button(label: "Submit issue report", color: PigColor.interfaceGrey, onTap: sumbitIssueReport));
+  }
 
+  Widget get helpRestartControls {
+    secondaryControlDimensionHeight = 65;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
+      height: secondaryControlHeight,
+      child: Button(label: "Start Over", color: PigColor.interfaceGrey, onTap: () => store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.IDLE))));
+  }
+
+  Widget get failedControls {
+    secondaryControlDimensionHeight = 130;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width - (kGutterWidth * 2),
+      height: secondaryControlHeight,
+      child: Column(children: [
+        Container(child: Text("Hate it when that happens.", style: TextStyles.important(context))),
+        Container(child: Text("I am going to send you a totally different code so you can approach this from a fresh angle..", style: TextStyles.regular(context))),
+        Container(child:
+          Button(label: "Send another code", onTap: resendCode)
+        ),
+    ]));
+  }
+
+  void timeoutSecondaryControlReveal() async {
+    // make sure the panel is hidden if the content is awol
+    if (secondaryControlContent == null){
+      this.secondaryControlHeight = 0.0;
+      return;
+    }
+    // don't do this if they are already visible
+    if (controlsVisible) return;
+
+    await Future.delayed(Duration(milliseconds: 1500), () => print("[INFO] Revealing Secondary Controls"));
+    setState(() { this.secondaryControlHeight = secondaryControlDimensionHeight; });
+  }
+
+  void addAdditionalControls(){
+    // sometimes we have additional controls.  There are rules for when to show them
+    secondaryControlContent = null;
+
+    /// ADDITIVE
+    // if we are on code entry
+    if (widget.pageIndex == PageEnum.CODE_ENTRY.index)
+      secondaryControlContent = resendControls;
+
+    // if we are on code timeout
+    if (widget.pageIndex == PageEnum.CODE_TIMEOUT.index)
+      secondaryControlContent = timeoutControls;
+
+    // if they got it wrong...
+    if (widget.pageIndex == PageEnum.ERROR.index)
+      secondaryControlContent = failedControls;
+
+    // if they need help...
+    if (widget.pageIndex == PageEnum.HELP.index)
+      secondaryControlContent = helpControls;
+
+    // help request sumbitted.
+    if (widget.pageIndex == PageEnum.HELP_RESTART.index)
+      secondaryControlContent = helpRestartControls;
+
+    /// SUBTRACTIVE
+    // if it's verifying then don't show the controls
+    if (widget.authState == AuthenticatorState.CODE_VERIFYING)
+      secondaryControlContent = null;
+
+    timeoutSecondaryControlReveal();
+  }
+
+
+  /// AUTHENTICATION ///////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   Future checkAuth() async {
     FirebaseAuth.instance
       .authStateChanges()
@@ -144,44 +238,14 @@ class _LoginState extends State<_Login> {
     authService.resendCode(fullNumber);
   }
 
-  void timeoutSecondaryControlReveal() async {
-    // make sure the panel is hidden if the content is awol
-    if (secondaryControlContent == null){
-      this.secondaryControlHeight = 0.0;
-      return;
-    }
-    // don't do this if they are already visible
-    if (controlsVisible) return;
-
-    await Future.delayed(Duration(milliseconds: 1500), () => print("[INFO] Revealing Secondary Controls"));
-    setState(() { this.secondaryControlHeight = 130.0; });
+  void completeLogin() async {
+    confettiController.play();
+    await Future.delayed(Duration(milliseconds: 1500));
+    Navigator.of(context).pushReplacementNamed("/dashboard");
   }
 
-  void addAdditionalControls(){
-    // sometimes we have additional controls.  There are rules for when to show them
-    secondaryControlContent = null;
-
-    /// ADDITIVE
-    // if we are on code entry
-    if (widget.pageIndex == PageEnum.CODE_ENTRY.index)
-      secondaryControlContent = resendControls;
-
-    // if we are on code timeout
-    if (widget.pageIndex == PageEnum.CODE_TIMEOUT.index)
-      secondaryControlContent = timeoutControls;
-
-    // if they got it wrong...
-    if (widget.pageIndex == PageEnum.ERROR.index)
-      secondaryControlContent = failedControls;
-
-    /// SUBTRACTIVE
-    // if it's verifying then don't show the controls
-    if (widget.authState == AuthenticatorState.CODE_VERIFYING)
-      secondaryControlContent = null;
-
-    timeoutSecondaryControlReveal();
-  }
-
+  /// GENERAL WIDGETS //////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   Widget loadingWidget(){
     if ([AuthenticatorState.DIGITS_VERIFYING, AuthenticatorState.CODE_VERIFYING].contains(widget.authState))
       return Padding(
@@ -199,6 +263,8 @@ class _LoginState extends State<_Login> {
     return Container();
   }
 
+  /// BUILD ////////////////////////////////////////////////////////////////////
+  /// //////////////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
 
@@ -338,39 +404,63 @@ class _LoginState extends State<_Login> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            ConfettiWidget(
-                              confettiController: confettiController,
-                              blastDirectionality: BlastDirectionality.explosive,
-                              shouldLoop: true,
-                              colors: const [
-                                PigColor.interfaceGrey,
-                                PigColor.primary
-                              ], // manually specify the colors to be used
-                            ),
                             SizedBox(height: 60, child:
-                              Button(label: "GO!", onTap: () => Navigator.of(context).pushReplacementNamed("/dashboard")))
+                              Button(label: "GO!", onTap: completeLogin)),
                           ]
                         ),
 
                         /// IDX 4 - ERROR
+                        Container(),
+
+                        /// IDX 5 - HELP
+                        SingleChildScrollView(child:Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Didn't get a code?", style: TextStyles.important(context)),
+                            Text("Sometimes I am unable to send codes via SMS. This can be for any number of technology reasons but not because of you!",style: TextStyles.regular(context)),
+                            SizedBox(height: 15),
+                            Text("It looks like we will need to talk to the Real Clean team.", style: TextStyles.important(context).copyWith(color: PigColor.primary)),
+                            Text("Please enter as much detail as you need to describe what is happening and the support crew will be in contact ASAP to resolve your issue.", style: TextStyles.regular(context)),
+                            SizedBox(height: 15),
+                            Input(controller: helpController, hintText: "Describe your issue here...",maxLines: 2)
+                        ])),
+
+                        /// IDX 6 - HELP RESTART
                         Container()
                       ]),
                   ),
               ),
 
-              SingleChildScrollView(child:
+              Column(
                 // this thing overflows. problem for another day.
+                mainAxisAlignment: MainAxisAlignment.end,
+                children:[
                 AnimatedContainer(
+                  color: Colors.transparent,
                   duration: Duration(milliseconds: 250),
                   height: secondaryControlHeight,
                   child: secondaryControlContent
                 )
-              )
+              ])
             ]
           ),
 
-          // Secondary Controls
 
+          Positioned(
+            left: MediaQuery.of(context).size.width * 0.5,
+            top: (MediaQuery.of(context).size.height * 0.5) - 50,
+            child: ConfettiWidget(
+              confettiController: confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              colors: const [
+                PigColor.interfaceGrey,
+                PigColor.primary
+              ], // manually specify the colors to be used
+            ),
+          )
 
         ])
 
@@ -378,11 +468,10 @@ class _LoginState extends State<_Login> {
   }
 }
 
-/// REDUX VIEW MODEL /////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-///
+/// REDUX VIEW MODEL ///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 enum PageEnum {
-  INITIAL, CODE_ENTRY, CODE_TIMEOUT, COMPLETE, ERROR
+  INITIAL, CODE_ENTRY, CODE_TIMEOUT, COMPLETE, ERROR, HELP, HELP_RESTART
 }
 class LoginModel extends Redux.BaseModel<AppState> {
   LoginModel();
@@ -399,7 +488,9 @@ class LoginModel extends Redux.BaseModel<AppState> {
     "Eyeballing...",
     "Whoops...",
     "Thanks!",
-    "Uh Oh..."
+    "Uh Oh...",
+    "Something not right?",
+    "Thank you.. and Sorry!"
   ];
 
   // Descriptions
@@ -408,7 +499,9 @@ class LoginModel extends Redux.BaseModel<AppState> {
     "I have sent you a txt message with a unique code so that I can verify that you are really you. Enter this code below..",
     "It took too long for you to enter the code so I had to reset it, sorry about that.  Ask me for a new code!",
     "We are now connected! Good things await inside, lets get started!",
-    "The code you entered looks strange to me... are you sure you are really a person?"
+    "The code you entered looks strange to me... are you sure you are really a person?",
+    "It seems that there are unknown forces preventing us from connecting.",
+    "I have dispatched the team of boffins to do some finger magic. For now.. you can always try again?"
   ];
 
 
@@ -447,6 +540,12 @@ class LoginModel extends Redux.BaseModel<AppState> {
         break;
       case AuthenticatorState.AUTHENTICATED:
         pageIndex = PageEnum.COMPLETE.index;
+        break;
+      case AuthenticatorState.HELP:
+        pageIndex = PageEnum.HELP.index;
+        break;
+      case AuthenticatorState.HELP_RESTART:
+        pageIndex = PageEnum.HELP_RESTART.index;
         break;
       default:
         pageIndex = PageEnum.INITIAL.index;

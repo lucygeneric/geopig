@@ -1,7 +1,7 @@
 name: geopig
-description: A new Flutter project.
+description: Utility app for RealClean staff
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -13,15 +13,20 @@ dependencies:
   after_layout: ^1.0.7+2
   animated_text_kit: 2.5.4
   async_redux: ^3.0.5
-  #async_redux: ^6.0.3
   confetti: ^0.5.4+1
   cupertino_icons: ^1.0.0
   firebase_auth: ^0.18.4+1
   firebase_core: "0.5.3"
+  flutter_launcher_icons: ^0.8.1
   flutter_svg: 0.18.1
-
-  #intl_phone_number_input: ^0.5.2+2
   intl_phone_number_input: 0.4.6+2
+  intl: ^0.16.1
+  qr_code_scanner: ^0.3.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
 
 dev_dependencies:
 
@@ -29,3 +34,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/icon/

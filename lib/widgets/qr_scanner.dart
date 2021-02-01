@@ -63,7 +63,7 @@ class _QRScannerState extends State<QRScanner> {
         children: [
           Positioned(left: 0, right: 0, top: 20, child:
             Container(width: size.width, height: 350, child:
-              QRView(key: qrKey, onQRViewCreated: onQRViewCreated,),
+              QRView(key: qrKey, onQRViewCreated: onQRViewCreated),
             )
           ),
 

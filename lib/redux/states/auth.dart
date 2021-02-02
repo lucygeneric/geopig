@@ -18,9 +18,9 @@ class AuthState {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-      other is AuthenticatorState &&
+      other is AuthState &&
       runtimeType == other.runtimeType &&
-      state == other;
+      state == other.state;
   }
 
   @override

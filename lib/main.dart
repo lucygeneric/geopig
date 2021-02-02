@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geopig/pages/dashboard/dashboard.dart';
 import 'package:geopig/pages/login/login.dart';
+import 'package:geopig/pages/profile/profile.dart';
 import 'package:geopig/pages/splash.dart';
 import 'package:geopig/redux/app_state.dart';
 import 'package:geopig/redux/store.dart';
@@ -28,7 +29,8 @@ class App extends StatelessWidget {
       routes: {
         //'/': (context) => Dashboard(),
         '/login': (context) => Login(),
-        '/dashboard': (context) => Dashboard()
+        '/dashboard': (context) => Dashboard(),
+        '/profile': (context) => Profile()
       },
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(

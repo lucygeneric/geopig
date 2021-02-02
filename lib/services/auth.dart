@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:geopig/redux/actions/auth.dart';
+import 'package:geopig/redux/actions/interface.dart';
 import 'package:geopig/redux/store.dart';
 
 enum AuthenticatorState {
@@ -43,7 +44,7 @@ class AuthenticationService {
 
     FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: number,
-      timeout: Duration(seconds: 120),
+      timeout: Duration(seconds: 20),
       forceResendingToken: forceResendingToken,
       verificationCompleted: (PhoneAuthCredential credential) {
         phoneAuthCredential = credential;
@@ -62,7 +63,9 @@ class AuthenticationService {
         verificationId = vId;
         resendCodeToken = resendToken;
         codeValid = true;
-        store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.CODE_SENT));
+        store.dispatchFuture(UpdateAuthenticatorState(value: AuthenticatorState.CODE_SENT)).then((value) =>
+          store.dispatchFuture(UpdateBusy(value: false))
+        );
       },
       codeAutoRetrievalTimeout: (String vId) {
         print("----------- code timeout, $verificationId");

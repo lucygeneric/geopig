@@ -15,6 +15,7 @@ class Input extends StatelessWidget {
   final Function onChanged;
   final String hintText;
   final TextAlign textAlign;
+  final TextInputType keyboardType;
 
   Input({
     this.controller,
@@ -24,7 +25,8 @@ class Input extends StatelessWidget {
     this.focusNode,
     this.onChanged,
     this.hintText,
-    this.textAlign
+    this.textAlign,
+    this.keyboardType
   });
 
   OutlineInputBorder standardBorder({Color color}){
@@ -57,6 +59,7 @@ class Input extends StatelessWidget {
         style: TextStyles.button(context),
         focusNode: focusNode,
         onChanged: onChanged,
+        keyboardType: keyboardType ?? TextInputType.text,
         textAlign: textAlign ?? TextAlign.left);
 
   }

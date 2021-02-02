@@ -27,7 +27,8 @@ class _BottomBarState extends State<BottomBar> {
               icon: SvgPicture.asset("assets/icon/icon_scan.svg")
             ),
             BottomBarButton(
-              icon: SvgPicture.asset("assets/icon/icon_profile.svg")
+              icon: SvgPicture.asset("assets/icon/icon_profile.svg"),
+              onTap: () => Navigator.of(context).pushReplacementNamed("/profile"),
             )
           ]
         )

@@ -32,7 +32,8 @@ class _SmsCodeInputState extends State<SmsCodeInput> {
       enabled: widget.enabled,
       textAlign: TextAlign.center,
       focusNode: codeFocusNodes[codeControllers.indexOf(controller)],
-      onChanged: (String value) => focusNext()
+      onChanged: (String value) => focusNext(),
+      keyboardType: TextInputType.number
   )).toList();
 
   void focusNext(){

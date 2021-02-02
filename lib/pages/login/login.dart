@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geopig/color.dart';
 import 'package:geopig/consts.dart';
 import 'package:geopig/redux/actions/auth.dart';
+import 'package:geopig/redux/actions/interface.dart';
 import 'package:geopig/redux/app_state.dart';
 import 'package:geopig/services/auth.dart';
 import 'package:geopig/type.dart';
@@ -28,9 +29,11 @@ class _Login extends StatefulWidget {
   final int pageIndex;
   final String tagline;
   final String description;
+  final bool interfaceBusy;
 
   _Login({
     this.authState,
+    this.interfaceBusy,
     this.pageIndex,
     this.tagline = "",
     this.description = ""
@@ -151,7 +154,7 @@ class _LoginState extends State<_Login> {
       height: secondaryControlHeight,
       child: Column(children: [
         Container(child: Text("Hate it when that happens.", style: TextStyles.important(context))),
-        Container(child: Text("I am going to send you a totally different code so you can approach this from a fresh angle..", style: TextStyles.regular(context))),
+        Container(child: Text("I am going to send you a different code so you can approach this from a fresh angle..", style: TextStyles.regular(context))),
         Container(child:
           Button(label: "Send another code", onTap: resendCode)
         ),
@@ -234,6 +237,7 @@ class _LoginState extends State<_Login> {
   }
 
   void resendCode() async {
+    store.dispatch(UpdateBusy(value: true));
     String fullNumber = await getPhoneNumber(inputController.text);
     authService.resendCode(fullNumber);
   }
@@ -460,7 +464,12 @@ class _LoginState extends State<_Login> {
                 PigColor.primary
               ], // manually specify the colors to be used
             ),
-          )
+          ),
+
+          if (widget.interfaceBusy)
+            Positioned(top:70, right: 18, child:
+              ProgressSpinner(size: 10.0)
+            ),
 
         ])
 
@@ -477,6 +486,7 @@ class LoginModel extends Redux.BaseModel<AppState> {
   LoginModel();
 
   AuthenticatorState authState;
+  bool interfaceBusy;
   int pageIndex;
   String tagline;
   String description;
@@ -507,10 +517,11 @@ class LoginModel extends Redux.BaseModel<AppState> {
 
   LoginModel.build({
     @required this.authState,
+    @required this.interfaceBusy,
     @required this.pageIndex,
     @required this.tagline,
     @required this.description,
-  }) : super(equals: [authState, pageIndex, tagline, description]);
+  }) : super(equals: [authState, interfaceBusy, pageIndex, tagline, description]);
 
 
   @override
@@ -551,8 +562,11 @@ class LoginModel extends Redux.BaseModel<AppState> {
         pageIndex = PageEnum.INITIAL.index;
     }
 
+    print("BUILDING interface busy? ${state.interfaceState.busy}");
+
     return LoginModel.build(
       authState: state.authState.state,
+      interfaceBusy: state.interfaceState.busy,
       pageIndex: pageIndex,
       tagline: taglineContents[pageIndex],
       description: descriptionContents[pageIndex]
@@ -567,6 +581,7 @@ class Login extends StatelessWidget {
       model: LoginModel(),
       builder: (BuildContext context, LoginModel vm) => _Login(
         authState: vm.authState,
+        interfaceBusy: vm.interfaceBusy,
         tagline: vm.tagline,
         description: vm.description,
         pageIndex: vm.pageIndex

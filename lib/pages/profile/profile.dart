@@ -3,6 +3,7 @@ import 'package:geopig/consts.dart';
 import 'package:geopig/redux/actions/auth.dart';
 import 'package:geopig/services/auth.dart';
 import 'package:geopig/redux/store.dart';
+import 'package:geopig/widgets/bottom_bar.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -19,7 +20,8 @@ class Profile extends StatelessWidget {
             }
             )),
         ])
-      )
+      ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 

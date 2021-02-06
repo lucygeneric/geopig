@@ -3,7 +3,6 @@ import 'package:geopig/color.dart';
 import 'package:geopig/consts.dart';
 import 'package:geopig/type.dart';
 import 'package:geopig/utils.dart';
-import 'package:geopig/widgets/bottom_bar.dart';
 import 'package:geopig/widgets/qr_scanner.dart';
 
 class Dashboard extends StatelessWidget {
@@ -12,8 +11,7 @@ class Dashboard extends StatelessWidget {
 
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: Padding(padding: EdgeInsets.only(top: kGutterWidth), child:
+    return Padding(padding: EdgeInsets.only(top: kGutterWidth), child:
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,9 +44,7 @@ class Dashboard extends StatelessWidget {
               Text("Scan the barcode at your site station", style: TextStyles.regular(context), textAlign: TextAlign.center)
             ),
         ]),
-      ),
-      bottomNavigationBar: BottomBar(),
-    );
+      );
   }
 
 

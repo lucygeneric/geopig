@@ -32,12 +32,15 @@ class AuthenticationService {
 
   AuthCredential phoneAuthCredential;
   String verificationId;
+  String fullNumber;
   int resendCodeToken;
   bool codeSent = false;
   bool authenticated = false;
   bool codeValid = true; // assume true until they fuck it up
 
   verifyNumber(String number, { int forceResendingToken }) {
+
+    fullNumber = number;
 
     if (forceResendingToken == null)
       store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.DIGITS_VERIFYING));

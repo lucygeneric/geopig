@@ -11,8 +11,10 @@ import 'package:geopig/color.dart';
 import 'package:geopig/consts.dart';
 import 'package:geopig/redux/actions/auth.dart';
 import 'package:geopig/redux/actions/interface.dart';
+import 'package:geopig/redux/actions/user.dart';
 import 'package:geopig/redux/app_state.dart';
 import 'package:geopig/services/auth.dart';
+import 'package:geopig/services/svg.dart';
 import 'package:geopig/type.dart';
 import 'package:geopig/widgets/button.dart';
 import 'package:geopig/widgets/input.dart';
@@ -43,7 +45,7 @@ class _Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<_Login> {
+class _LoginState extends State<_Login>  with AfterLayoutMixin{
 
   double primaryContentOpacity = 0.0;
   double secondaryControlHeight = 0.0;
@@ -78,6 +80,18 @@ class _LoginState extends State<_Login> {
     inputController?.dispose();
     super.dispose();
   }
+
+   @override
+  void afterFirstLayout(BuildContext context) async {
+
+    // Preload SVGs as assets so they dont flicker
+    SvgService.preloadSvgs(context, [
+      'assets/icon/icon_info.svg',
+      'assets/icon/icon_profile.svg',
+      'assets/icon/icon_scan.svg'
+    ]);
+  }
+
 
   /// ACTIONS //////////////////////////////////////////////////////////////////
   /// //////////////////////////////////////////////////////////////////////////
@@ -245,7 +259,8 @@ class _LoginState extends State<_Login> {
   void completeLogin() async {
     confettiController.play();
     await Future.delayed(Duration(milliseconds: 1500));
-    Navigator.of(context).pushReplacementNamed("/dashboard");
+    await store.dispatchFuture(CreateUserFromNumber(number: authService.fullNumber));
+    Navigator.of(context).pushReplacementNamed("/base");
   }
 
   /// GENERAL WIDGETS //////////////////////////////////////////////////////////
@@ -340,6 +355,7 @@ class _LoginState extends State<_Login> {
                 child:
                     PageView(
                       controller: pageController,
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
                         /// IDX 0 - DIGITS/IDLE ------------------
                         Column(
@@ -529,7 +545,6 @@ class LoginModel extends Redux.BaseModel<AppState> {
 
 
     int pageIndex;
-    print("----------------------- state.authState.state ${state.authState.state}");
     switch(state.authState.state){
       case AuthenticatorState.IDLE:
       case AuthenticatorState.DIGITS_VERIFYING:
@@ -561,8 +576,6 @@ class LoginModel extends Redux.BaseModel<AppState> {
       default:
         pageIndex = PageEnum.INITIAL.index;
     }
-
-    print("BUILDING interface busy? ${state.interfaceState.busy}");
 
     return LoginModel.build(
       authState: state.authState.state,

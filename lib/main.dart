@@ -1,9 +1,8 @@
 import 'package:async_redux/async_redux.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geopig/pages/dashboard/dashboard.dart';
+import 'package:geopig/pages/base.dart';
 import 'package:geopig/pages/login/login.dart';
-import 'package:geopig/pages/profile/profile.dart';
 import 'package:geopig/pages/splash.dart';
 import 'package:geopig/redux/app_state.dart';
 import 'package:geopig/redux/store.dart';
@@ -18,7 +17,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => StoreProvider<AppState>(
     store: store,
     child: MaterialApp(
-      title: 'Geopig Slave Watchdog',
+      title: 'Geolocation Watchdog',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         //visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -29,8 +28,7 @@ class App extends StatelessWidget {
       routes: {
         //'/': (context) => Dashboard(),
         '/login': (context) => Login(),
-        '/dashboard': (context) => Dashboard(),
-        '/profile': (context) => Profile()
+        '/base': (context) => Base(),
       },
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(

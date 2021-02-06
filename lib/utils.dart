@@ -32,4 +32,13 @@ class Utils {
     return "Night";
   }
 
+
+  static logInfo(String message, { bool append = false}){
+    print("\n== INFO =============================================\n$message\n=====================================================");
+  }
+
+  static logError(String message, { bool append = false}){
+    print("\n= ERROR =============================================\n$message\n=====================================================");
+  }
+
 }

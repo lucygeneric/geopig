@@ -16,6 +16,7 @@ class Input extends StatelessWidget {
   final String hintText;
   final TextAlign textAlign;
   final TextInputType keyboardType;
+  final bool autofocus;
 
   Input({
     this.controller,
@@ -26,7 +27,8 @@ class Input extends StatelessWidget {
     this.onChanged,
     this.hintText,
     this.textAlign,
-    this.keyboardType
+    this.keyboardType,
+    this.autofocus = false,
   });
 
   OutlineInputBorder standardBorder({Color color}){
@@ -37,10 +39,11 @@ class Input extends StatelessWidget {
 
   InputDecoration get codeDecoration =>  InputDecoration(
     hintText: hintText ?? '',
+    hintStyle: TextStyle(fontSize: 16.0, color: PigColor.standardText.withOpacity(0.4)),
     counterText: '',
     fillColor: PigColor.interfaceGrey.withOpacity(enabled ? 0.5 : 0.1),
     filled: true,
-    contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+    contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 15.0),
     focusedBorder: standardBorder(color: PigColor.primary),
     errorBorder: standardBorder(color: PigColor.error),
     disabledBorder: standardBorder(color: PigColor.interfaceGrey.withOpacity(0.1)),
@@ -58,6 +61,7 @@ class Input extends StatelessWidget {
         decoration: codeDecoration,
         style: TextStyles.button(context),
         focusNode: focusNode,
+        autofocus: autofocus,
         onChanged: onChanged,
         keyboardType: keyboardType ?? TextInputType.text,
         textAlign: textAlign ?? TextAlign.left);

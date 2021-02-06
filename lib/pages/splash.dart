@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geopig/consts.dart';
+import 'package:geopig/pages/base.dart';
 import 'package:geopig/pages/dashboard/dashboard.dart';
 import 'package:geopig/pages/login/login.dart';
 import 'package:geopig/services/auth.dart';
@@ -43,7 +44,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       Navigator.pushReplacement(
           context, MaterialPageRoute<Login>(
           builder: (BuildContext context) {
-            return AuthenticationService.loggedIn ? Dashboard() : Login();
+            return AuthenticationService.loggedIn ? Base() : Login();
           }));
     });
 }

@@ -55,7 +55,7 @@ class AuthenticationService {
 
     FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: number,
-      timeout: Duration(seconds: 20),
+      timeout: Duration(seconds: 100),
       forceResendingToken: forceResendingToken,
       verificationCompleted: (PhoneAuthCredential credential) {
         phoneAuthCredential = credential;

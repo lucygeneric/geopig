@@ -8,6 +8,6 @@ class PigColor {
   static const warn           = Color(0xFFF9C716);
   // text
   static const headlineText   = Color(0xFF000000);
-  static const standardText   = Color(0xFF7C7C7C);
+  static const standardText   = Color(0xFF000000);
   static const buttonText     = Color(0xFF000000);
 }

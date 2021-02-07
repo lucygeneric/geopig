@@ -21,7 +21,7 @@ class Site implements BaseModel {
 
   factory Site.fromMap(Map<String, dynamic> map) {
     return Site(
-      id: map['id'],
+      id: map['id'] ?? uuid.v4(),
       name: map['name'],
       address: map['address'],
       geojson: map['geojson'],

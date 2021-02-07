@@ -51,9 +51,9 @@ class DBProvider {
         futures.add(db.execute("""
           CREATE TABLE user (
             id TEXT PRIMARY KEY,
-            name STRING,
-            phone NUMBER,
-            third_party_id STRING
+            name TEXT,
+            phone TEXT,
+            third_party_id TEXT
           );
         """));
 
@@ -61,7 +61,7 @@ class DBProvider {
           CREATE TABLE event (
             id TEXT PRIMARY KEY,
             timestamp TEXT,
-            type STRING,
+            type TEXT,
             data JSON
           );
         """));

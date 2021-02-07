@@ -470,7 +470,7 @@ class _LoginState extends State<_Login>  with AfterLayoutMixin{
 
           Positioned(
             left: MediaQuery.of(context).size.width * 0.5,
-            top: (MediaQuery.of(context).size.height * 0.5) - 50,
+            top: (MediaQuery.of(context).size.height * 0.5) - 120,
             child: ConfettiWidget(
               confettiController: confettiController,
               blastDirectionality: BlastDirectionality.explosive,

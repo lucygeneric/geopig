@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:geopig/models/event.dart';
+import 'package:geopig/models/site.dart';
 import 'package:geopig/redux/actions/auth.dart';
 import 'package:geopig/redux/actions/interface.dart';
 import 'package:geopig/redux/store.dart';
+import 'package:geopig/models/user.dart' as u;
 
 enum AuthenticatorState {
   IDLE,
@@ -24,7 +27,12 @@ class AuthenticationService {
 
   static bool get loggedIn => user != null;
 
-  static logout() => FirebaseAuth.instance.signOut();
+  static logout() async {
+    await u.User.db.destroyAll();
+    await Event.db.destroyAll();
+    await Site.db.destroyAll();
+    FirebaseAuth.instance.signOut();
+  }
 
   final VoidCallback stateChangeCallback;
 

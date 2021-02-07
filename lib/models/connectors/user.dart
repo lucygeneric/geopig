@@ -8,7 +8,7 @@ import 'package:geopig/models/user.dart';
 class UserConnector extends DatabaseConnector<User> {
   String get tableName => 'user';
 
-  User get  user => items.isNotEmpty ? items.last : null;
+  User get user => items.isNotEmpty ? items.first : null;
 
   @override
   User parseRecord(Map<String, dynamic> record) {
@@ -20,19 +20,9 @@ class UserConnector extends DatabaseConnector<User> {
     var db = await DBProvider.db;
 
     var result = await db.query(tableName);
-    User item = User();
-    if (result.length == 1) {
-      item = parseRecord(result.last);
-    }
+    User item = parseRecord(result.first);
     replace(item);
     return item;
-  }
-
-  Future upsert(User record) async {
-    await destroyAll();
-    await insert(record);
-
-    return replace(await load());
   }
 
   @override

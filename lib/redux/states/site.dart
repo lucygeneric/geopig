@@ -10,7 +10,7 @@ class SiteState {
     }
   }
 
-  SiteState copy({Site site}) {
+  SiteState copy({List<Site> sites}) {
     return SiteState(sites: sites ?? this.sites);
   }
 

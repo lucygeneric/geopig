@@ -1,5 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:geopig/models/event.dart';
+import 'package:geopig/models/site.dart';
+import 'package:geopig/models/user.dart';
 import 'package:geopig/pages/dashboard/dashboard.dart';
 import 'package:geopig/pages/info/info.dart';
 import 'package:geopig/pages/profile/profile.dart';
@@ -10,13 +13,26 @@ import 'package:async_redux/async_redux.dart' as Redux;
 class _Base extends StatefulWidget {
 
   final int pageIndex;
-  _Base({this.pageIndex = 0});
+  _Base({this.pageIndex = 1});
 
   @override
   _BaseState createState() => _BaseState();
 }
 
 class _BaseState extends State<_Base> {
+
+  @override
+  void initState(){
+    // preload some stuff
+    preloadModels();
+    super.initState();
+  }
+
+  void preloadModels() async {
+    await User.db.load();
+    await Site.db.load();
+    await Event.db.load();
+  }
 
   Widget get currentPage {
     switch(widget.pageIndex){

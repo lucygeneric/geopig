@@ -14,10 +14,8 @@ class AddEvent extends BaseAction {
 
     List<Event> events = List.of(state.eventState.events);
 
+    await Event.db.insert(event);
     events.insert(0, event);
-
-    await Event.db.upsert(event);
-    Event.db.replace(events);
 
     return state.copy(eventState: EventState(events: events));
 

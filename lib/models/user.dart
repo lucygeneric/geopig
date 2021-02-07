@@ -23,8 +23,10 @@ class User implements BaseModel {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'],
-      name: map['name']
+      id: map['id'] ?? uuid.v4(),
+      name: map['name'],
+      phone: map['phone'],
+      thirdPartyId: map['third_party_id']
     );
   }
 

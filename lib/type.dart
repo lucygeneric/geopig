@@ -25,6 +25,10 @@ class TextStyles {
     return TextStyles.regular(context).copyWith(fontWeight: FontWeight.w600, color: PigColor.headlineText, inherit: true);
   }
 
+  static TextStyle heading(BuildContext context, [Color color, FontWeight fontWeight]) {
+    return TextStyles.regular(context).copyWith(fontWeight: FontWeight.w900, color: PigColor.primary, inherit: true);
+  }
+
   // button
   static TextStyle button(BuildContext context, [Color color, FontWeight fontWeight]) {
     return TextStyles.regular(context).copyWith(fontWeight: FontWeight.w600, color: PigColor.headlineText, inherit: true);

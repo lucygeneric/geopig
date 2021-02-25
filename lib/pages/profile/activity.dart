@@ -41,6 +41,7 @@ class _ActivityTileState extends State<ActivityTile> {
 
   void generateMap(int width, int height) async {
     String url = MapService.getStaticMapPath(widget.event.latLng, widget.event.site, width, height + 50);
+    print(url);
     final ByteData imageData = await NetworkAssetBundle(Uri.parse(url)).load("");
     print(url);
     setState(() {

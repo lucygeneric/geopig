@@ -15,7 +15,7 @@ class ScanService  {
   static decodeScan(Map<String, dynamic> scan) async {
     try {
       // decode site / upsert
-      Site site = store.state.siteState.sites.firstWhere((site) => site.id == scan["data"]["id"], orElse: () => null);
+      Site site = store.state.siteState.sites.firstWhere((site) => site.id == scan["id"], orElse: () => null);
       if (site == null)
         site = Site.fromMap(ScanService.siteMapFromScan(scan));
       await store.dispatchFuture(AddSite(site: site));
@@ -44,10 +44,10 @@ class ScanService  {
 
   static siteMapFromScan(Map<String, dynamic> scan){
     return {
-      "id": scan["data"]["id"],
-      "name": scan["data"]["name"],
-      "address": scan["data"]["address"],
-      "geojson": "{\"type\":\"Feature\",\"properties\": {\"stroke\": \"#019ade\",\"stroke-width\": 2,\"stroke-opacity\": 1,\"fill\": \"#019ade\",\"fill-opacity\": 0.5},\"geometry\":{\"type\":\"Polygon\",\"coordinates\": ${scan['data']['coordinates']}}}"
+      "id": scan["id"],
+      "name": scan["name"],
+      "address": scan["address"],
+      "geojson": "{\"type\":\"Feature\",\"properties\": {\"stroke\": \"#019ade\",\"stroke-width\": 2,\"stroke-opacity\": 1,\"fill\": \"#019ade\",\"fill-opacity\": 0.5},\"geometry\":{\"type\":\"Polygon\",\"coordinates\": [${scan['coordinates']}]}}"
     };
   }
 

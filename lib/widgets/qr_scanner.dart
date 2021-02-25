@@ -43,7 +43,7 @@ class _QRScannerState extends State<QRScanner> {
       try {
         print(scanData.code);
         result = json.decode(scanData.code);
-        controller.pauseCamera();
+
         if (widget.exitOnScan)
           completeScan();
         else
@@ -71,7 +71,7 @@ class _QRScannerState extends State<QRScanner> {
 
     return Stack(
         children: [
-          Positioned(left: 0, right: 0, top: 20, child:
+          Positioned(left: 0, right: 0, top: 10, child:
             Container(width: size.width, height: 350, child:
               QRView(
                 key: qrKey,
@@ -81,8 +81,8 @@ class _QRScannerState extends State<QRScanner> {
             )
           ),
 
-          Positioned(left: 0, right: 0, bottom: 0, top: 20,
-            child: Container(height: 150.0, color: Colors.black.withOpacity(0.4)),
+          Positioned(left: 0, right: 0, top: 0,
+            child: Container(height: 20.0, color: Colors.white),
           ),
 
           Positioned(bottom: 10,  right: 10,

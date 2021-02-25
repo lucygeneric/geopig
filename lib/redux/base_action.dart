@@ -3,6 +3,7 @@ import 'package:geopig/redux/app_state.dart';
 import 'package:geopig/redux/states/auth.dart';
 import 'package:geopig/redux/states/event.dart';
 import 'package:geopig/redux/states/interface.dart';
+import 'package:geopig/redux/states/scan.dart';
 import 'package:geopig/redux/states/site.dart';
 import 'package:geopig/redux/states/user.dart';
 
@@ -13,4 +14,5 @@ abstract class BaseAction extends ReduxAction<AppState> {
   InterfaceState get interfaceState => state.interfaceState;
   EventState get eventState => state.eventState;
   SiteState get siteState => state.siteState;
+  ScanState get scanState => state.scanState;
 }

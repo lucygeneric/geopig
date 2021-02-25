@@ -212,6 +212,24 @@
       "languageVersion": "1.19"
     },
     {
+      "name": "location",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/location-3.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "location_platform_interface",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/location_platform_interface-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.4"
+    },
+    {
+      "name": "location_web",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/location_web-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "logging",
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/logging-0.11.4",
       "packageUri": "lib/",
@@ -422,7 +440,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-02-07T23:47:13.203805Z",
+  "generated": "2021-02-10T15:59:30.669092Z",
   "generator": "pub",
   "generatorVersion": "2.9.2"
 }

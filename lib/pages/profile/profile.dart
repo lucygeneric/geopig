@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geopig/consts.dart';
+import 'package:geopig/mixins/dialog.dart';
 import 'package:geopig/models/event.dart';
 import 'package:geopig/models/user.dart';
 import 'package:geopig/pages/profile/activity.dart';
@@ -23,7 +24,7 @@ class _Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<_Profile> {
+class _ProfileState extends State<_Profile> with DialogBuilder {
 
   final TextEditingController nameController = TextEditingController();
 
@@ -126,48 +127,18 @@ class _ProfileState extends State<_Profile> {
 
           Positioned(bottom: 0, left: 0, right: 0, child:
             Button(label: 'Logout', onTap: (){
-              showGeneralDialog(
-                context: context,
-                barrierColor: Colors.white.withOpacity(0.95),
-                barrierDismissible: false,
-                barrierLabel: "Dialog",
-                transitionDuration: Duration(milliseconds: 400),
-                pageBuilder: (_, __, ___) {
-                  return Padding(padding: EdgeInsets.all(kGutterWidth), child: SizedBox.expand(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 5,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text("Sure you want to log out?", style: TextStyles.subtitle(context, Colors.black, FontWeight.bold), textAlign: TextAlign.center),
-                              SizedBox(height: 10),
-                              Text("You will have to log in again.\nHow annoying.", style: TextStyles.regular(context), textAlign: TextAlign.center)
-                            ]),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child:
-                              SizedBox.expand(
-                              child: Column(
-                                children: <Widget>[
-                                  Button(label: "Yes. I enjoy extra work.", onTap: (){
-                                    AuthenticationService.logout();
-                                    store.dispatch(LogoutUser());
-                                    store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.IDLE));
-                                    Navigator.of(context).pushNamed("/");
-                                  }, state: ButtonState.PRIMARY),
-                                  Button(label: "No! Take me back to safety.", onTap:() => Navigator.pop(context))
-                                ])
-                              )
-                          ),
-                        ],
-                      ),
-                    ));
-                  },
-                );
+              generalDialog(context: context,
+                title: "Sure you want to log out?",
+                copy: "You will have to log in again.\nHow annoying.",
+                buttons: [
+                  Button(label: "Yes. I enjoy extra work.", onTap: (){
+                    AuthenticationService.logout();
+                    store.dispatch(LogoutUser());
+                    store.dispatch(UpdateAuthenticatorState(value: AuthenticatorState.IDLE));
+                    Navigator.of(context).pushNamed("/");
+                  }, state: ButtonState.PRIMARY),
+                  Button(label: "No! Take me back to safety.", onTap:() => Navigator.pop(context))
+                ]);
               }, state: ButtonState.PRIMARY,
             )
           ),

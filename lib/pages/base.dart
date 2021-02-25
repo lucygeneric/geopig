@@ -13,7 +13,7 @@ import 'package:async_redux/async_redux.dart' as Redux;
 class _Base extends StatefulWidget {
 
   final int pageIndex;
-  _Base({this.pageIndex = 1});
+  _Base({this.pageIndex = 0});
 
   @override
   _BaseState createState() => _BaseState();

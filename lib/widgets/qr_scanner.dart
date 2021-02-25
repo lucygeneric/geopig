@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -25,7 +27,7 @@ class _QRScannerState extends State<QRScanner> {
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController controller;
-  Barcode result;
+  Map<String,dynamic> result;
 
   bool isFlashOn(String current) {
     return QRScanner.FLASH_ON == current;
@@ -38,9 +40,17 @@ class _QRScannerState extends State<QRScanner> {
   void onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
+      try {
+        print(scanData.code);
+        result = json.decode(scanData.code);
+        controller.pauseCamera();
+        if (widget.exitOnScan)
+          completeScan();
+        else
+          setState(() { }); // redraw
+      } catch (e){
+        print("Unable to decode QR result $e");
+      }
     });
   }
 
@@ -63,7 +73,11 @@ class _QRScannerState extends State<QRScanner> {
         children: [
           Positioned(left: 0, right: 0, top: 20, child:
             Container(width: size.width, height: 350, child:
-              QRView(key: qrKey, onQRViewCreated: onQRViewCreated),
+              QRView(
+                key: qrKey,
+                onQRViewCreated: onQRViewCreated,
+                overlay: QrScannerOverlayShape( borderColor: Colors.white, borderRadius: 10, borderLength: 30, borderWidth: 10, cutOutSize: 200),
+              ),
             )
           ),
 
@@ -88,7 +102,6 @@ class _QRScannerState extends State<QRScanner> {
               IconButton(iconSize: 20, color: Colors.white, icon: Icon(Icons.flash_on),
                 onPressed: (){
                   if (controller != null) {
-                    controller.flipCamera();
                     if (isFlashOn(flashState)) {
                       setState(() { cameraState = QRScanner.FLASH_OFF; });
                     } else {

@@ -4,6 +4,7 @@ import 'package:geopig/consts.dart';
 import 'package:geopig/models/event.dart';
 import 'package:geopig/models/site.dart';
 import 'package:geopig/redux/actions/event.dart';
+import 'package:geopig/redux/actions/interface.dart';
 import 'package:geopig/redux/actions/site.dart';
 import 'package:geopig/redux/store.dart';
 import 'package:geopig/type.dart';
@@ -67,6 +68,7 @@ class _InfoState extends State<Info> {
     await store.dispatchFuture(AddEvent(event: e2));
     await store.dispatchFuture(AddEvent(event: e3));
 
+    store.dispatch(UpdatePage(index: 1));
   }
 
   @override

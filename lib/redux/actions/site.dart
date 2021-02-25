@@ -18,9 +18,9 @@ class AddSite extends BaseAction {
     if(sites.firstWhere((e) => e.id == site.id, orElse: () => null) == null) {
       await Site.db.insert(site);
       sites.insert(0, site);
+    } else {
+      await Site.db.upsert(site);
     }
-
-    Site.db.replace(sites);
 
     return state.copy(siteState: SiteState(sites: sites));
 

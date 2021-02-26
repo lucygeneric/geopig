@@ -71,7 +71,9 @@ class DBProvider {
             id TEXT PRIMARY KEY,
             name TEXT,
             address TEXT,
-            geojson TEXT
+            geojson TEXT,
+            lat REAL,
+            lng REAL
           );
         """));
 

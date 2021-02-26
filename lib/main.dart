@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geopig/pages/base.dart';
 import 'package:geopig/pages/login/login.dart';
+import 'package:geopig/pages/navigation/turn_by_turn.dart';
 import 'package:geopig/pages/splash.dart';
 import 'package:geopig/redux/app_state.dart';
 import 'package:geopig/redux/store.dart';
@@ -29,6 +30,14 @@ class App extends StatelessWidget {
         //'/': (context) => Dashboard(),
         '/login': (context) => Login(),
         '/base': (context) => Base(),
+        '/routing': (context) {
+          final TurnByTurnNavigationArguments arguments = ModalRoute.of(context).settings.arguments;
+          return TurnByTurnNavigation(
+            origin: arguments.origin,
+            destination: arguments.destination,
+            destinationName: arguments.name,
+          );
+        }
       },
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(

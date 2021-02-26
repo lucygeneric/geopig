@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geopig/color.dart';
 import 'package:geopig/consts.dart';
 import 'package:geopig/mixins/dialog.dart';
 import 'package:geopig/models/event.dart';
+import 'package:geopig/models/site.dart';
 import 'package:geopig/models/user.dart';
 import 'package:geopig/pages/profile/activity.dart';
+import 'package:geopig/pages/profile/site.dart';
 import 'package:geopig/redux/actions/auth.dart';
 import 'package:geopig/redux/actions/user.dart';
 import 'package:geopig/redux/app_state.dart';
@@ -18,7 +22,8 @@ class _Profile extends StatefulWidget {
 
   final User user;
   final List<Event> events;
-  _Profile({this.user, this.events});
+  final List<Site> sites;
+  _Profile({this.user, this.events, this.sites});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -54,9 +59,31 @@ class _ProfileState extends State<_Profile> with DialogBuilder {
 
   List<Widget> get events {
     List<Widget> events = [];
-    for(Event event in widget.events)
+    events.add(
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 20), child: Text("Recent Activity", style: TextStyles.important(context))
+      ),
+    );
+    for(Event event in widget.events.take(6))
       events.add(ActivityTile(event: event, hilite: widget.events.indexOf(event) < 2));
+    if (widget.events.length > 6)
+      events.add(Button(label: "Show more events", state: ButtonState.INTERFACE,
+        onTap: () => Fluttertoast.showToast(msg: 'Yeah getting there... soon. Soon.',toastLength: Toast.LENGTH_LONG, backgroundColor: PigColor.primary, textColor: Colors.white)
+      ));
     return events;
+  }
+
+  List<Widget> get sites {
+    List<Widget> sites = [];
+    sites.add(
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 20), child: Text("My Sites", style: TextStyles.important(context))
+      ),
+    );
+    for(Site site in widget.sites){
+      sites.add(SiteTile(site: site));
+    }
+    return sites;
   }
 
 
@@ -101,12 +128,10 @@ class _ProfileState extends State<_Profile> with DialogBuilder {
                   Text("${widget.user.name}", style: TextStyles.headline(context), textAlign: TextAlign.center),
 
                 if (!needsToEnterName)
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 20), child: Text("Recent Activity", style: TextStyles.important(context))
-                  ),
+                  ...events,
 
                 if (!needsToEnterName)
-                  ...events
+                  ...sites
               ]),
             )
           ),
@@ -151,11 +176,13 @@ class ProfileModel extends Redux.BaseModel<AppState> {
 
   User user;
   List<Event> events;
+  List<Site> sites;
 
   ProfileModel.build({
     @required this.user,
     @required this.events,
-  }) : super(equals: [user, events]);
+    @required this.sites,
+  }) : super(equals: [user, events, sites]);
 
   @override
   ProfileModel fromStore() {
@@ -167,7 +194,8 @@ class ProfileModel extends Redux.BaseModel<AppState> {
 
     return ProfileModel.build(
       user: state.userState.user,
-      events: events
+      events: events,
+      sites: state.siteState.sites
     );
   }
 }
@@ -179,7 +207,8 @@ class Profile extends StatelessWidget {
       model: ProfileModel(),
       builder: (BuildContext context, ProfileModel vm) => _Profile(
         user: vm.user,
-        events: vm.events
+        events: vm.events,
+        sites: vm.sites
       ),
     );
   }

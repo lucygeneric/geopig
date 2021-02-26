@@ -6,7 +6,12 @@ import 'package:geopig/models/user.dart';
 import 'package:geopig/pages/dashboard/dashboard.dart';
 import 'package:geopig/pages/info/info.dart';
 import 'package:geopig/pages/profile/profile.dart';
+import 'package:geopig/redux/actions/interface.dart';
+import 'package:geopig/redux/actions/scan.dart';
 import 'package:geopig/redux/app_state.dart';
+import 'package:geopig/redux/states/event.dart';
+import 'package:geopig/redux/states/scan.dart';
+import 'package:geopig/redux/store.dart';
 import 'package:geopig/widgets/bottom_bar.dart';
 import 'package:async_redux/async_redux.dart' as Redux;
 
@@ -24,14 +29,21 @@ class _BaseState extends State<_Base> {
   @override
   void initState(){
     // preload some stuff
-    preloadModels();
+    startup();
     super.initState();
   }
 
-  void preloadModels() async {
+  void startup() async {
+    // check models
     await User.db.load();
     await Site.db.load();
     await Event.db.load();
+    // preset state based on data
+    List<Event> events = store.state.eventState.events;
+    if (events.isNotEmpty && events.first.type == EventType.SCAN_IN){
+      store.state.scanState.forceState(ScanFlowState.SCANNED_IN);
+      store.dispatch(UpdatePage(index: 1));
+    }
   }
 
   Widget get currentPage {

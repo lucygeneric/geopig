@@ -43,11 +43,12 @@ class _QRScannerState extends State<QRScanner> {
       try {
         print(scanData.code);
         result = json.decode(scanData.code);
-
+        controller.pauseCamera();
         if (widget.exitOnScan)
           completeScan();
         else
           setState(() { }); // redraw
+          controller.resumeCamera();
       } catch (e){
         print("Unable to decode QR result $e");
       }

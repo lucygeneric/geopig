@@ -158,6 +158,12 @@
       "languageVersion": "2.3"
     },
     {
+      "name": "flutter_mapbox_navigation",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_mapbox_navigation-0.0.19",
+      "packageUri": "lib/",
+      "languageVersion": "2.7"
+    },
+    {
       "name": "flutter_svg",
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_svg-0.18.1",
       "packageUri": "lib/",
@@ -168,6 +174,24 @@
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "2.0"
+    },
+    {
+      "name": "fluttertoast",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-7.1.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.7"
+    },
+    {
+      "name": "geocode",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/geocode-0.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.3"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.12.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.4"
     },
     {
       "name": "http_parser",
@@ -292,6 +316,12 @@
     {
       "name": "path_provider_windows",
       "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-0.0.4+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "pedantic",
+      "rootUri": "file:///home/steve/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/pedantic-1.9.0",
       "packageUri": "lib/",
       "languageVersion": "2.1"
     },
@@ -440,7 +470,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-02-25T19:01:41.562001Z",
+  "generated": "2021-02-26T20:34:39.840032Z",
   "generator": "pub",
   "generatorVersion": "2.9.2"
 }

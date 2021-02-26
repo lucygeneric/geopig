@@ -96,13 +96,8 @@ class _InfoState extends State<Info> {
                 Text(
                   "The purpose of this early-access beta is to facilitate closed alpha user testing.  Questions, complaints or suggestions can be directed at Todd via the RealClean headquarters."
                 , style: TextStyles.regular(context)),
-                SizedBox(height: 20),
-                Text(
-                  "To generate a few test sites and some dummy data hit the 'Generate' button below."
-                , style: TextStyles.regular(context)),
 
-                Spacer(),
-                Button(label: "Generate Test Data", onTap: () => precan())
+
             ])
         )
       ])

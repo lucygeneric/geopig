@@ -1,6 +1,6 @@
 import 'package:geopig/pages/dashboard/dashboard.dart';
 
-enum ScanFlowState { IDLE, SCANNED_IN, SCANNING_OUT }
+enum ScanFlowState { IDLE, SCANNED_IN, SCANNING_OUT, SCANNED_OUT, FORCE_SCAN_OUT }
 
 class ScanState {
 
@@ -15,6 +15,8 @@ class ScanState {
   }
 
   static ScanState initialState() => ScanState(state: ScanFlowState.IDLE);
+
+  void forceState(ScanFlowState newState) => this.state = newState;
 
   @override
   bool operator ==(Object other) {

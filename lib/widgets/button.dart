@@ -4,7 +4,7 @@ import 'package:geopig/color.dart';
 import 'package:geopig/consts.dart';
 import 'package:geopig/type.dart';
 
-enum ButtonState { PRIMARY, SECONDARY, WARN }
+enum ButtonState { PRIMARY, SECONDARY, WARN, INTERFACE }
 
 class Button extends StatelessWidget {
 
@@ -26,6 +26,9 @@ class Button extends StatelessWidget {
       case ButtonState.WARN:
         return PigColor.warn;
       break;
+      case ButtonState.INTERFACE:
+        return Colors.white;
+      break;
       default: // ButtonState.SECONDARY
         return PigColor.interfaceGrey;
     }
@@ -34,6 +37,8 @@ class Button extends StatelessWidget {
   Color get textColorFromState {
     if (this.state == ButtonState.SECONDARY)
       return onTap != null ? PigColor.standardText : PigColor.standardText.withOpacity(0.5);
+    if (this.state == ButtonState.INTERFACE)
+      return PigColor.interfaceGrey;
     return Colors.white;
   }
 

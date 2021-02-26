@@ -24,7 +24,7 @@ class ScanService  {
       dynamic result = await LocationService.currentLocation;
 
       if (result is LocationData){
-        EventType type = store.state.scanState.state == ScanFlowState.SCANNED_IN ? EventType.SCAN_OUT : EventType.SCAN_IN;
+        EventType type = store.state.scanState.state == ScanFlowState.SCANNING_OUT ? EventType.SCAN_OUT : EventType.SCAN_IN;
         Event event = Event(id: Uuid().v4(), timestamp: DateTime.now(), type: type, data: EventData(
           latitude: result.latitude,
           longitude: result.longitude,
@@ -49,6 +49,24 @@ class ScanService  {
       "address": scan["address"],
       "geojson": "{\"type\":\"Feature\",\"properties\": {\"stroke\": \"#019ade\",\"stroke-width\": 2,\"stroke-opacity\": 1,\"fill\": \"#019ade\",\"fill-opacity\": 0.5},\"geometry\":{\"type\":\"Polygon\",\"coordinates\": [${scan['coordinates']}]}}"
     };
+  }
+
+  static forceScanOut() async {
+    Event currentEvent = store.state.eventState.events.first;
+
+    // pinpoint hax-out location
+    dynamic result = await LocationService.currentLocation;
+
+    await store.dispatchFuture(AddEvent(event: Event(
+      type: EventType.SCAN_MISSING,
+      timestamp: DateTime.now(),
+      data: EventData(
+        latitude: result.latitude,
+        longitude: result.longitude,
+        accuracy: result.accuracy,
+        siteId: currentEvent.site.id
+      )
+    )));
   }
 
 }

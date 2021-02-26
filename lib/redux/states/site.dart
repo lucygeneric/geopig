@@ -14,7 +14,7 @@ class SiteState {
     return SiteState(sites: sites ?? this.sites);
   }
 
-  static SiteState initialState() => SiteState(sites: const []);
+  static SiteState initialState() => SiteState(sites: Site.db.items ?? const []);
 
   Future persist() async {
     await Site.db.upsertMany(sites);
